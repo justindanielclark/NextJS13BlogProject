@@ -1,8 +1,7 @@
 import Posts from "./components/Posts";
 import MyProfilePic from "./components/MyProfilePic";
-import "highlight.js/styles/atom-one-dark.css";
 
-export const revalidate = 10;
+export const revalidate = 86400;
 
 export default function Home() {
   return (

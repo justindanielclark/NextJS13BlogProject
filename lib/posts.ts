@@ -2,6 +2,8 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings/lib";
 import rehypeHighlight from "rehype-highlight/lib";
 import rehypeSlug from "rehype-slug";
+import Video from "@/app/components/Video";
+import CustomImage from "@/app/components/CustomImage";
 
 export async function getPostsMeta(): Promise<Meta[] | undefined> {
   if (typeof process.env.GITHUB_TOKEN !== "string") {
@@ -12,10 +14,9 @@ export async function getPostsMeta(): Promise<Meta[] | undefined> {
     ["Authorization", `Bearer ${process.env.GITHUB_TOKEN}`],
     ["X-GitHub-Api-Version", "2022-11-28"],
   ]);
-  const res = await fetch(
-    "https://api.github.com/repos/justindanielclark/NextJS13BlogPosts/git/trees/main?recursive=1",
-    { headers }
-  );
+  const res = await fetch("https://api.github.com/repos/justindanielclark/NextJS13BlogPosts/git/trees/main", {
+    headers,
+  });
   if (!res.ok) {
     return undefined;
   }
@@ -51,6 +52,10 @@ export async function getPostByName(fileName: string) {
   if (rawMDX === "404: Not Found") return undefined;
   const { frontmatter, content } = await compileMDX<{ title: string; date: string; tags: string[] }>({
     source: rawMDX,
+    components: {
+      Video,
+      CustomImage,
+    },
     options: {
       parseFrontmatter: true,
       mdxOptions: {
